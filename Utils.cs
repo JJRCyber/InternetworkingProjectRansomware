@@ -56,6 +56,7 @@ namespace UTSRansomware
             SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, filePath, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE);
         }
 
+        // Reads key and iv from user, checks to see if it matches the encryptor instance
         public static bool ValidateKeyAndIv(byte[] key, byte[] iv)
         {
             // Prompt user for key and IV
