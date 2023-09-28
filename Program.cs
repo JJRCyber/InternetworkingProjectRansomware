@@ -12,7 +12,7 @@
 
             // Creates new encryptor class and and encrypt "special" directories e.g Desktop, Documents, etc
             Encryptor encryptor = new Encryptor();
-            encryptor.EncryptSpecialDirectories();
+            // encryptor.EncryptSpecialDirectories();
 
             // Will recursively encrypt all files, currently throws a lot of errors
 
