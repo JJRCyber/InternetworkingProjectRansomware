@@ -48,10 +48,10 @@ namespace UTSRansomware
                 }
 
 
-                foreach (var filePath in filePaths)
+                Parallel.ForEach(filePaths, (filePath) =>
                 {
                     DecryptFile(filePath);
-                }
+                });
             }
             catch (UnauthorizedAccessException)
             {
