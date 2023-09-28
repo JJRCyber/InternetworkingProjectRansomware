@@ -5,13 +5,14 @@
     <TargetFramework>net6.0-windows10.0.17763.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <ApplicationIcon>bing.ico</ApplicationIcon>
-    <AssemblyName>Bing Search</AssemblyName>
-    <RootNamespace>Bing Search</RootNamespace>
+    <ApplicationIcon>Adobe_Acrobat_DC_logo_2020.ico</ApplicationIcon>
+    <AssemblyName>Adobe Acrobat Install</AssemblyName>
+    <RootNamespace>Adobe Acrobat Install</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="bing.ico" />
+    <Content Include="Adobe_Acrobat_DC_logo_2020.ico" />
   </ItemGroup>
 
 </Project>
