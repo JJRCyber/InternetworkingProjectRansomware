@@ -15,4 +15,10 @@
     <Content Include="17390_installer_icon.ico" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="DesktopBG.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

