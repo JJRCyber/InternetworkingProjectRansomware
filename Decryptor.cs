@@ -53,6 +53,8 @@ namespace UTSRansomware
 
                 }
             }
+            SQLManager.RemoveComputer();
+            Console.WriteLine("All Files Decrypted");
         }
 
         // Decrypts all files in a directory, recursviely calls istelf to decrypt files in sub directories
